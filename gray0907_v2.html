@@ -319,6 +319,12 @@ button{font:inherit;cursor:pointer}
   .preloader__logo{transform:scale(0.7)}
   .preloader__pct{font-size:14px}
 }
+
+@media(max-width:767px){
+  .about > div[style*="grid-template-columns"]{grid-template-columns:1fr!important}
+  .about > div[style*="grid-template-columns"] > div:last-child{min-height:240px!important;position:relative!important}
+  .about > div[style*="grid-template-columns"] > div:last-child img{position:absolute!important;top:0!important;left:0!important;width:100%!important;height:100%!important;object-fit:cover!important;object-position:center 30%!important}
+}
 </style>
 </head>
 <body>
@@ -420,7 +426,7 @@ button{font:inherit;cursor:pointer}
 <main class="main">
 
   <section class="hero hero--video" id="manifest">
-    <video class="hero__video-bg" autoplay muted playsinline loop id="heroVideo" src="https://github.com/6sns/2211.base/releases/download/v1/magnific_.-.-.-.-.-.-.-.-._tfd9MDomZJ.2_1.mp4"></video>
+    <video class="hero__video-bg" autoplay muted playsinline loop preload="auto" id="heroVideo" src="https://github.com/6sns/2211.base/releases/download/v1/magnific_.-.-.-.-.-.-.-.-._tfd9MDomZJ.2_1.mp4"></video>
     <div class="hero__overlay"></div>
     
 
@@ -865,10 +871,12 @@ button{font:inherit;cursor:pointer}
 
   var loadDone = false;
   if(video){
+    video.addEventListener('canplay', function(){ loadDone = true; });
     video.addEventListener('canplaythrough', function(){ loadDone = true; });
-    setTimeout(function(){ loadDone = true; }, 8000);
-  } else {
+    video.addEventListener('error', function(){ loadDone = true; });
     setTimeout(function(){ loadDone = true; }, 3000);
+  } else {
+    setTimeout(function(){ loadDone = true; }, 2000);
   }
 
   function easeOutCubic(t){ return 1-Math.pow(1-t,3); }
