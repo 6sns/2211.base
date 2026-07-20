@@ -426,7 +426,7 @@ button{font:inherit;cursor:pointer}
 <main class="main">
 
   <section class="hero hero--video" id="manifest">
-    <video class="hero__video-bg" autoplay muted playsinline loop preload="auto" id="heroVideo" src="hero_video.mp4"></video>
+    <video class="hero__video-bg" autoplay muted playsinline webkit-playsinline loop preload="auto" id="heroVideo" src="hero_video.mp4"></video>
     <div class="hero__overlay"></div>
     
 
@@ -1077,6 +1077,39 @@ button{font:inherit;cursor:pointer}
   document.addEventListener('click', function(){
     if(av.paused) av.play().catch(function(){});
   }, {once:true});
+})();
+</script>
+
+<script>
+(function(){
+  var v = document.getElementById('heroVideo');
+  if(!v) return;
+  
+  // Force play on any user interaction (needed for Telegram WebView, iOS Safari)
+  function forcePlay(){
+    v.muted = true;
+    var p = v.play();
+    if(p && p.then) p.catch(function(){});
+  }
+  
+  // Try playing immediately
+  forcePlay();
+  
+  // Retry after short delays
+  setTimeout(forcePlay, 500);
+  setTimeout(forcePlay, 1500);
+  
+  // On first user touch/click — force play
+  var events = ['touchstart','touchend','click','scroll'];
+  function onInteract(){
+    forcePlay();
+    events.forEach(function(e){ document.removeEventListener(e, onInteract); });
+  }
+  events.forEach(function(e){ document.addEventListener(e, onInteract, {once:false,passive:true}); });
+  
+  // Also try when video data arrives
+  v.addEventListener('loadeddata', forcePlay);
+  v.addEventListener('canplay', forcePlay);
 })();
 </script>
 </body>
