@@ -426,7 +426,7 @@ button{font:inherit;cursor:pointer}
 <main class="main">
 
   <section class="hero hero--video" id="manifest">
-    <video class="hero__video-bg" autoplay muted playsinline webkit-playsinline loop preload="auto" id="heroVideo" src="hero_video.mp4"></video>
+    <video class="hero__video-bg" id="heroVideo" loop muted playsinline preload="auto" style="object-fit:cover"></video>
     <div class="hero__overlay"></div>
     
 
@@ -871,33 +871,28 @@ button{font:inherit;cursor:pointer}
 
   var loadDone = false;
   
-  // Load video as blob — mobile browsers treat blob URLs as local content
-  // and allow autoplay without user interaction (same as base64)
+  // Load video as blob for reliable mobile autoplay
   if(video){
-    var videoSrc = video.src || video.getAttribute('src');
-    if(videoSrc && videoSrc.indexOf('blob:') !== 0 && videoSrc.indexOf('data:') !== 0){
-      video.removeAttribute('src');
-      video.load();
-      fetch(videoSrc)
-        .then(function(r){ return r.blob(); })
-        .then(function(blob){
-          var blobUrl = URL.createObjectURL(blob);
-          video.src = blobUrl;
-          video.load();
-          video.muted = true;
-          video.play().catch(function(){});
-          loadDone = true;
-        })
-        .catch(function(){
-          video.src = videoSrc;
-          video.load();
-          loadDone = true;
-        });
-    } else {
-      video.addEventListener('canplay', function(){ loadDone = true; });
-    }
+    fetch('hero_video.mp4')
+      .then(function(r){ return r.blob(); })
+      .then(function(blob){
+        var blobUrl = URL.createObjectURL(new Blob([blob], {type:'video/mp4'}));
+        video.src = blobUrl;
+        video.muted = true;
+        video.setAttribute('muted','');
+        video.playsInline = true;
+        video.setAttribute('playsinline','');
+        video.load();
+        loadDone = true;
+      })
+      .catch(function(){
+        // fallback to direct URL
+        video.src = 'hero_video.mp4';
+        video.load();
+        loadDone = true;
+      });
     video.addEventListener('error', function(){ loadDone = true; });
-    setTimeout(function(){ loadDone = true; }, 5000);
+    setTimeout(function(){ loadDone = true; }, 6000);
   } else {
     setTimeout(function(){ loadDone = true; }, 2000);
   }
@@ -931,22 +926,21 @@ button{font:inherit;cursor:pointer}
         // Start video playback before fading preloader
         if(video){
           video.currentTime = 0;
+          video.muted = true;
+          video.setAttribute('muted','');
           function tryPlay(){
+            video.muted = true;
             var p = video.play();
             if(p && p.then){
               p.then(function(){}).catch(function(){
-                // Retry after short delay
-                setTimeout(tryPlay, 200);
+                setTimeout(tryPlay, 300);
               });
             }
           }
-          if(video.readyState >= 2){
-            tryPlay();
-          } else {
-            video.addEventListener('canplay', function(){ tryPlay(); }, {once:true});
-            // Also try immediately in case event already fired
-            setTimeout(tryPlay, 100);
-          }
+          tryPlay();
+          setTimeout(tryPlay, 500);
+          setTimeout(tryPlay, 1000);
+          setTimeout(tryPlay, 2000);
         }
         preloader.classList.add('is-done');
         /* sidebar managed by scroll handler */
