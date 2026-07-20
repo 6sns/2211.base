@@ -426,7 +426,7 @@ button{font:inherit;cursor:pointer}
 <main class="main">
 
   <section class="hero hero--video" id="manifest">
-    <video class="hero__video-bg" autoplay muted playsinline webkit-playsinline loop preload="auto" id="heroVideo" data-src="hero_video.mp4"></video>
+    <video class="hero__video-bg" autoplay muted playsinline webkit-playsinline loop preload="auto" id="heroVideo" src="hero_video.mp4"></video>
     <div class="hero__overlay"></div>
     
 
@@ -870,11 +870,34 @@ button{font:inherit;cursor:pointer}
   setTimeout(function(){ mark.classList.add('animate'); }, 300);
 
   var loadDone = false;
+  
+  // Load video as blob — mobile browsers treat blob URLs as local content
+  // and allow autoplay without user interaction (same as base64)
   if(video){
-    video.addEventListener('canplay', function(){ loadDone = true; });
-    video.addEventListener('canplaythrough', function(){ loadDone = true; });
+    var videoSrc = video.src || video.getAttribute('src');
+    if(videoSrc && videoSrc.indexOf('blob:') !== 0 && videoSrc.indexOf('data:') !== 0){
+      video.removeAttribute('src');
+      video.load();
+      fetch(videoSrc)
+        .then(function(r){ return r.blob(); })
+        .then(function(blob){
+          var blobUrl = URL.createObjectURL(blob);
+          video.src = blobUrl;
+          video.load();
+          video.muted = true;
+          video.play().catch(function(){});
+          loadDone = true;
+        })
+        .catch(function(){
+          video.src = videoSrc;
+          video.load();
+          loadDone = true;
+        });
+    } else {
+      video.addEventListener('canplay', function(){ loadDone = true; });
+    }
     video.addEventListener('error', function(){ loadDone = true; });
-    setTimeout(function(){ loadDone = true; }, 3000);
+    setTimeout(function(){ loadDone = true; }, 5000);
   } else {
     setTimeout(function(){ loadDone = true; }, 2000);
   }
@@ -1081,46 +1104,5 @@ button{font:inherit;cursor:pointer}
 </script>
 
 
-<script>
-(function(){
-  var v = document.getElementById('heroVideo');
-  if(!v) return;
-  var src = v.getAttribute('data-src');
-  if(!src) return;
-  
-  // Load video as blob and create object URL (treated as local content — autoplay works)
-  fetch(src)
-    .then(function(r){ return r.blob(); })
-    .then(function(blob){
-      var url = URL.createObjectURL(blob);
-      v.src = url;
-      v.load();
-      v.muted = true;
-      var p = v.play();
-      if(p && p.then) p.catch(function(){});
-    })
-    .catch(function(){
-      // Fallback: just set src directly
-      v.src = src;
-      v.load();
-      v.muted = true;
-      var p = v.play();
-      if(p && p.then) p.catch(function(){});
-    });
-
-  // Also force play on first touch (for strict browsers)
-  function forcePlay(){
-    v.muted = true;
-    var p = v.play();
-    if(p && p.then) p.catch(function(){});
-  }
-  ['touchstart','click'].forEach(function(e){
-    document.addEventListener(e, function handler(){
-      forcePlay();
-      document.removeEventListener(e, handler);
-    }, {passive:true});
-  });
-})();
-</script>
 </body>
 </html>                           
