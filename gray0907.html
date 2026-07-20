@@ -426,7 +426,7 @@ button{font:inherit;cursor:pointer}
 <main class="main">
 
   <section class="hero hero--video" id="manifest">
-    <video class="hero__video-bg" autoplay muted playsinline webkit-playsinline loop preload="auto" id="heroVideo" src="hero_video.mp4"></video>
+    <video class="hero__video-bg" autoplay muted playsinline webkit-playsinline loop preload="auto" id="heroVideo" data-src="hero_video.mp4"></video>
     <div class="hero__overlay"></div>
     
 
@@ -1080,36 +1080,46 @@ button{font:inherit;cursor:pointer}
 })();
 </script>
 
+
 <script>
 (function(){
   var v = document.getElementById('heroVideo');
   if(!v) return;
+  var src = v.getAttribute('data-src');
+  if(!src) return;
   
-  // Force play on any user interaction (needed for Telegram WebView, iOS Safari)
+  // Load video as blob and create object URL (treated as local content — autoplay works)
+  fetch(src)
+    .then(function(r){ return r.blob(); })
+    .then(function(blob){
+      var url = URL.createObjectURL(blob);
+      v.src = url;
+      v.load();
+      v.muted = true;
+      var p = v.play();
+      if(p && p.then) p.catch(function(){});
+    })
+    .catch(function(){
+      // Fallback: just set src directly
+      v.src = src;
+      v.load();
+      v.muted = true;
+      var p = v.play();
+      if(p && p.then) p.catch(function(){});
+    });
+
+  // Also force play on first touch (for strict browsers)
   function forcePlay(){
     v.muted = true;
     var p = v.play();
     if(p && p.then) p.catch(function(){});
   }
-  
-  // Try playing immediately
-  forcePlay();
-  
-  // Retry after short delays
-  setTimeout(forcePlay, 500);
-  setTimeout(forcePlay, 1500);
-  
-  // On first user touch/click — force play
-  var events = ['touchstart','touchend','click','scroll'];
-  function onInteract(){
-    forcePlay();
-    events.forEach(function(e){ document.removeEventListener(e, onInteract); });
-  }
-  events.forEach(function(e){ document.addEventListener(e, onInteract, {once:false,passive:true}); });
-  
-  // Also try when video data arrives
-  v.addEventListener('loadeddata', forcePlay);
-  v.addEventListener('canplay', forcePlay);
+  ['touchstart','click'].forEach(function(e){
+    document.addEventListener(e, function handler(){
+      forcePlay();
+      document.removeEventListener(e, handler);
+    }, {passive:true});
+  });
 })();
 </script>
 </body>
