@@ -426,7 +426,7 @@ button{font:inherit;cursor:pointer}
 <main class="main">
 
   <section class="hero hero--video" id="manifest">
-    <video class="hero__video-bg" id="heroVideo" autoplay loop muted playsinline webkit-playsinline style="object-fit:cover" src="hero_video.mp4"></video>
+    <video class="hero__video-bg" id="heroVideo" autoplay loop muted playsinline webkit-playsinline preload="auto" style="object-fit:cover"><source src="hero_video.mp4" type="video/mp4"></video>
     <div class="hero__overlay"></div>
     
 
@@ -871,10 +871,14 @@ button{font:inherit;cursor:pointer}
 
   var loadDone = false;
   if(video){
-    video.addEventListener('canplay', function(){ loadDone = true; });
+    video.muted = true;
+    video.setAttribute('muted','');
+    video.addEventListener('canplay', function(){ loadDone = true; video.play().catch(function(){}); });
+    video.addEventListener('loadeddata', function(){ loadDone = true; video.play().catch(function(){}); });
     video.addEventListener('error', function(){ loadDone = true; });
     video.load();
-    setTimeout(function(){ loadDone = true; }, 8000);
+    video.play().catch(function(){});
+    setTimeout(function(){ loadDone = true; }, 6000);
   } else {
     setTimeout(function(){ loadDone = true; }, 2000);
   }
@@ -911,16 +915,21 @@ button{font:inherit;cursor:pointer}
           video.muted = true;
           function tryPlay(){
             video.muted = true;
+            video.setAttribute('muted','');
             var p = video.play();
             if(p && p.then){
               p.then(function(){}).catch(function(){
-                setTimeout(tryPlay, 500);
+                setTimeout(tryPlay, 300);
               });
             }
           }
           tryPlay();
+          setTimeout(tryPlay, 500);
           setTimeout(tryPlay, 1000);
-          setTimeout(tryPlay, 3000);
+          setTimeout(tryPlay, 2000);
+          setTimeout(tryPlay, 4000);
+          document.addEventListener('touchstart', function(){video.muted=true;video.play().catch(function(){});}, {once:true});
+          document.addEventListener('scroll', function(){video.muted=true;video.play().catch(function(){});}, {once:true});
         }
         preloader.classList.add('is-done');
         /* sidebar managed by scroll handler */
