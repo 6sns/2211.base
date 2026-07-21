@@ -426,7 +426,7 @@ button{font:inherit;cursor:pointer}
 <main class="main">
 
   <section class="hero hero--video" id="manifest">
-    <video class="hero__video-bg" id="heroVideo" src="hero_video.mp4" autoplay loop muted playsinline preload="auto" style="object-fit:cover"></video>
+    <video class="hero__video-bg" id="heroVideo" autoplay loop muted playsinline webkit-playsinline style="object-fit:cover" src="hero_video.mp4"></video>
     <div class="hero__overlay"></div>
     
 
@@ -872,9 +872,9 @@ button{font:inherit;cursor:pointer}
   var loadDone = false;
   if(video){
     video.addEventListener('canplay', function(){ loadDone = true; });
-    video.addEventListener('canplaythrough', function(){ loadDone = true; });
     video.addEventListener('error', function(){ loadDone = true; });
-    setTimeout(function(){ loadDone = true; }, 4000);
+    video.load();
+    setTimeout(function(){ loadDone = true; }, 8000);
   } else {
     setTimeout(function(){ loadDone = true; }, 2000);
   }
