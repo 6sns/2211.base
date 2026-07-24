@@ -70,7 +70,7 @@ button{font:inherit;cursor:pointer}
 .section{padding:50px var(--pad-x)}
 .section--flush{padding-left:0;padding-right:0}
 .eyebrow{font-size:14px;color:var(--c-dark);opacity:0.55;letter-spacing:0.01em;font-weight:400}
-.projects .eyebrow{color:var(--c-dark)}
+.projects .eyebrow{color:#fff}
 .projects{margin-top:-1px}
 
 
@@ -89,7 +89,7 @@ button{font:inherit;cursor:pointer}
 
 /* PROJECTS */
 .projects{padding-bottom:22px}
-.projects__head{padding:28px var(--pad-x) 24px;background:#F0F0F3;margin-left:calc(-1*(var(--sb-w) + var(--sb-gap)*2));width:calc(100% + var(--sb-w) + var(--sb-gap)*2);padding-left:calc(var(--pad-x) + var(--sb-w) + var(--sb-gap)*2)}
+.projects__head{padding:28px var(--pad-x) 24px;background:#3F4757;margin-left:calc(-1*(var(--sb-w) + var(--sb-gap)*2));width:calc(100% + var(--sb-w) + var(--sb-gap)*2);padding-left:calc(var(--pad-x) + var(--sb-w) + var(--sb-gap)*2)}
 .projects__carousel{position:relative;margin-left:calc(-1*(var(--sb-w) + var(--sb-gap)*2));width:calc(100% + var(--sb-w) + var(--sb-gap)*2);height:clamp(560px,88vh,900px);overflow:hidden;border-radius:0;background:var(--c-dark) center/cover no-repeat}
 .projects__slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity .5s ease}
 .projects__slide.is-active{opacity:1}
@@ -320,7 +320,7 @@ button{font:inherit;cursor:pointer}
   .hero--video .hero__lead{display:none}
   
   .preloader__logo{transform:scale(0.7)}
-  .preloader__text{transform:scale(0.7)}
+  .preloader__text svg{width:203px!important}
   .preloader__pct{font-size:14px}
 }
 
@@ -489,9 +489,9 @@ button{font:inherit;cursor:pointer}
     </div>
   </section>
 
-  <section class="about" id="manifest-text" style="padding:100px var(--pad-x) 60px var(--pad-x);margin-bottom:0;background:#F0F0F3;margin-left:calc(-1*(var(--sb-w) + var(--sb-gap)*2));width:calc(100% + var(--sb-w) + var(--sb-gap)*2);padding-left:calc(var(--pad-x) + var(--sb-w) + var(--sb-gap)*2)">
+  <section class="about" id="manifest-text" style="padding:100px var(--pad-x) 60px var(--pad-x);margin-bottom:0;background:#3F4757;margin-left:calc(-1*(var(--sb-w) + var(--sb-gap)*2));width:calc(100% + var(--sb-w) + var(--sb-gap)*2);padding-left:calc(var(--pad-x) + var(--sb-w) + var(--sb-gap)*2)">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:clamp(32px,4vw,64px)">
-        <div class="about__text" style="max-width:100%;color:var(--c-dark)">
+        <div class="about__text" style="max-width:100%;color:#FFFFFF">
           <p style="font-size:clamp(28px,2.4vw,38px);font-weight:500;line-height:1.15;margin-bottom:24px">22/11 Девелопмент</p>
           <p>&mdash;&nbsp;это проекты, заточенные под целевую аудиторию &laquo;своих&raquo;: людей с&nbsp;внутренним двигателем, вкусом, особым взглядом на&nbsp;жизнь и&nbsp;высокой планкой к&nbsp;среде.</p>
           <p style="opacity:0.4">Создаём проекты, в&nbsp;которых всё подчинено стремлению создать ощущение дома и&nbsp;своего круга&nbsp;&mdash; от&nbsp;приватности и&nbsp;повседневного комфорта до&nbsp;технологичности решений, сервиса, клубной инфраструктуры и&nbsp;атмосферы беззаботной жизни.</p>
