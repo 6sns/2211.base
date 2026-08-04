@@ -70,7 +70,7 @@ button{font:inherit;cursor:pointer}
 .section{padding:50px var(--pad-x)}
 .section--flush{padding-left:0;padding-right:0}
 .eyebrow{font-size:14px;color:var(--c-dark);opacity:0.55;letter-spacing:0.01em;font-weight:400}
-.projects .eyebrow{color:var(--c-dark)}
+.projects .eyebrow{color:#fff}
 .projects{margin-top:-1px}
 
 
@@ -214,8 +214,13 @@ button{font:inherit;cursor:pointer}
 @keyframes preloaderFadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
 
 
-.about[style*="3F4757"] .about__text{color:#FFFFFF}
+
 .about[style*="3F4757"] .about__text p{color:#FFFFFF}
+
+.hero--video .hero__title{text-align:left!important}
+.hero--video .hero__subtitle{text-align:left!important}
+.hero--video .hero__lead{text-align:left!important}
+
 /* HERO TOP BAR */
 .hero-bar{position:absolute;top:0;left:0;right:0;z-index:10;display:flex;align-items:center;padding:14px 100px;transition:opacity 0.8s cubic-bezier(0.25,1,0.5,1);opacity:0;pointer-events:none}
 .hero-bar__logo{flex-shrink:0}
@@ -245,7 +250,7 @@ button{font:inherit;cursor:pointer}
 /* === RESPONSIVE: Tablet 1024-1439 === */
 @media(max-width:1439px){
   .hero-bar{padding:14px 60px}
-  .hero__panel{width:44%;padding:0 48px 160px 60px}
+  .hero--video .hero__panel{width:44%;padding:0 48px 160px 60px}
   .hero--video .hero__title{font-size:clamp(32px,4.5vw,60px)}
   .hero--video .hero__lead{left:60px;right:60px;font-size:14px}
 }
